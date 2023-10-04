@@ -1,4 +1,4 @@
-const { create, getProducts, getProductById, updateProduct, deleteProductById } = require("./track.services");
+const { create, getProducts, getProductById, updateProduct, deleteProductById,getTotalPrice } = require("./track.services");
 const { genSaltSync, hashSync} = require("bcrypt");
 const { get } = require("express/lib/response");
 var nodemailer = require('nodemailer');
@@ -28,6 +28,22 @@ module.exports = {
      getProductById:(req,res) => {
         const id = req.params.id;
         getProductById(id, (err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    data:err
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+     },
+     getTotPrice:(req,res) => {
+        const id = req.body.id;
+        getTotalPrice(id, (err, results) => {
             if(err){
                 return res.status(500).json({
                     success:0,

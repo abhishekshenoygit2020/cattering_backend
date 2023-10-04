@@ -8,16 +8,16 @@ module.exports  = {
         const trackno = data.trackno;
         const date = new Date();
     
-        pool.query('SELECT quantity FROM stock WHERE product_id = ?', [product_id], (error, results) => {
+        pool.query('SELECT quantity FROM stock WHERE product_id = ?', [data.product_id], (error, results) => {
             if (error) {
                 console.error(error);
                 return callBack(error);
             }
-    
+            
             if (results.length > 0 && results[0].quantity >= quantity) {
                 pool.query(
-                    'INSERT INTO purchase_track (product_id, quantity, track_no, date) VALUES (?, ?, ?, ?)',
-                    [product_id, quantity, trackno, date],
+                    'INSERT INTO purchase_track (product_id, quantity, trackno, date) VALUES (?, ?, ?, ?)',
+                    [data.product_id, quantity, trackno, date],
                     (error, results) => {
                         if (error) {
                             console.error(error);
@@ -106,6 +106,34 @@ module.exports  = {
                     return callBack(err)
                 }else{
                     return callBack(null, results);
+                }
+                
+            }
+        );
+     },
+
+     //getting total price of trackno products
+     getTotalPrice:(id,callBack) => {
+        pool.query(
+            `SELECT purchase_track.quantity as pro_quantity, product.price as pro_price FROM purchase_track INNER JOIN product ON purchase_track.product_id = product.id where trackno = ?`,
+            [id],
+            (err,results,fields) => {
+                if(err){
+                    return callBack(err);
+                }
+                else if(results == ""){
+                    err = "Data not found";
+                    return callBack(err)
+                }else{
+                    var total = 0;
+                    
+                    if(results.length>0){
+                        for(var j=0;j<results.length;j++){
+                            total += results[j].pro_quantity*results[j].pro_price;
+                        }
+                    }
+
+                    return callBack(null, total);
                 }
                 
             }
