@@ -9,29 +9,32 @@ module.exports = {
             (error,results) => {
                 if(results == ""){
                     pool.query(
-                        `INSERT INTO userregister(username, email, phone, password, didx) VALUES (?,?,?,?,?)`,
+                        `INSERT INTO userregister(first_name, last_name, username,email,contact) VALUES (?,?,?,?,?)`,
                         [
+                            data.first_name,
+                            data.last_name,
                             data.username,
                             data.email,
-                            data.phone,
-                            data.password,
-                            data.didx
+                            data.contact,
+                            data.password
                         ],
                         (error) => {
                             if(error){
                                 return callBack(error);
                             }else{
+                                var user="user";
                                 const salt = genSaltSync(10);
                                 var pwd = hashSync(data.password, salt);
                                 pool.query(
-                                    `INSERT INTO users(name,email,mobileno,password,userRole,companyCode) VALUES (?,?,?,?,?,?)`,
+                                    `INSERT INTO users(first_name, last_name, username,email,contact,password,userRole) VALUES (?,?,?,?,?,?,?)`,
                                     [
+                                        data.first_name,
+                                        data.last_name,
                                         data.username,
                                         data.email,
-                                        data.phone,
+                                        data.contact,
                                         pwd,
-                                        "user",
-                                        data.companyCode
+                                        user
                                     ],
                                     (error)=> {
                                         if(error){
