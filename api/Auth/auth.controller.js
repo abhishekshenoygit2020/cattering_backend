@@ -25,7 +25,9 @@ module.exports = {
                         userToken:results.token,
                         userRole:results.userRole,
                         userCompany:results.company,
-                        empid:results.empid              
+                        empid:results.empid,
+                        username:results.username,
+                        email:results.email           
                     },
                     status:200
                 });
