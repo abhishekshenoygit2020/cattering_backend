@@ -25,9 +25,9 @@ module.exports = {
                 else
                 {
                     
-                    let bool = bcrypt.compareSync(data.password,results[0].password);                   
+                    //let bool = bcrypt.compareSync(data.password,results[0].password);                   
 
-                    if(bool == false){
+                    if(data.password != results[0].password){
                         const login_fail_attempt = parseInt(results[0].login_fail_attempt) + 1;
                         pool.query(
                             `Update users set login_fail_attempt = ? where email = ?`,
