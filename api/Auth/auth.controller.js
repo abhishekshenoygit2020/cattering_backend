@@ -1,4 +1,4 @@
-const { create, fetchUser, updatePasswords, getUsers,getUser, logoutUsers ,logoutdetails} = require("./auth.services");
+const { create, fetchUser, updatePasswords, getUsers,getUser, logoutUsers ,logoutdetails,changepwd,forgotpwd} = require("./auth.services");
 const { genSaltSync, hashSync} = require("bcrypt");
 const { get } = require("express/lib/response");
 var nodemailer = require('nodemailer');
@@ -59,14 +59,61 @@ module.exports = {
             }            
         });
     }, 
-    //defining 
-    // function (a,b){
-    //     return a+b;
-    // }
 
-    // console.log(callback(5,1));//6
+   
 
 
+
+    changePassword:(req,res) => {
+        const bodyData = req.body;
+
+        changepwd(bodyData,(err,results) => {
+            if(err){
+                return res.status(500).json( {
+                    success:0,
+                    status:500,
+                    error:err
+                });
+            }else if(results){
+                return res.status(200).json( {
+                    success:1,
+                    status:200,
+                    message:results
+                });
+            }
+        });
+      
+        
+    },
+    forgotPassword:(req,res)=>{
+        const body=req.body;
+        forgotpwd(body,(errromessge,results)=>{ 
+            if(errromessge){
+                return res.status(500).json({
+                    success:0,
+                    status:500,
+                    err:errromessge
+                });
+            }else if(results){
+                var mailReq = {
+                    to:body.email,
+                    subject:"You recently requested reset your password",
+                    html:'Dear '+body.email+'<br> You recently requested reset your password<br> Password : '+results.password+'<br><br> Thank you<br>Team'+'testcompany'
+                };
+        
+                mail(mailReq,res);
+
+
+                // return res.status(200).json({
+                //     success:1,
+                //     status:200,
+                //     message:results
+
+                // })
+            }
+
+        });
+    },
     getCompanyUsers:(req,res)=>{
         var companyCode = req.headers['companycode'];
         getUsers(companyCode,(err,empty,results)=>{

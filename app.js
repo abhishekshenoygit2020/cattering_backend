@@ -15,39 +15,6 @@ app.use(bodyParser.json());
 app.use(baseRoute);
 
 
-// app.post("/posts",(req,res) => {     
-//     jwt.verify(req.token, 'secretkey', (err, authData) => {
-//         if(err){
-//             res.status(403).json({
-//                 err
-//             });
-//         }
-//         else{
-//             res.json({
-//                 message:"authenticated",
-//                 authData
-//             });
-//         }
-//     });        
-// });
- 
-// app.post("/login",(req,res) => {  
-//     const data = req.body;  
-//     const email = data.email;  
-//     const password = data.password;    
-//     const user = {
-//         id:1,
-//         username:"",
-//         email:data.password         
-//     };  
-//     res.json({
-//         id:1,
-//         username:"",
-//         email:data.password     
-//     });
-
-// });
-
 
 
 app.listen(process.env.APP_PORT,()=>{

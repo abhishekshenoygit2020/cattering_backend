@@ -1,4 +1,4 @@
-const {login,otpGeneration, createUser, updatePassword, getCompanyUsers ,getUsers, logoutUser ,logoutdetail} = require("./auth.controller");
+const {login,otpGeneration, createUser, updatePassword, getCompanyUsers ,getUsers, logoutUser ,logoutdetail,changePassword,forgotPassword} = require("./auth.controller");
 
 const router = require("express").Router();
 
@@ -9,5 +9,7 @@ router.post("/login", login)
     .get("/getUser",getCompanyUsers)
     .get("/get",getUsers)
     .post("/logout",logoutUser)
+    .post("/changePassword",changePassword)
+    .post("/forgotPassword",forgotPassword)
     .get("/getlogout",logoutdetail);
 module.exports =  router;

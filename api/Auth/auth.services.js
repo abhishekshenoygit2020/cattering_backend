@@ -2,6 +2,7 @@ const res = require("express/lib/response");
 const pool = require("../../config/dbconfig");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const { genSaltSync, hashSync} = require("bcrypt");
 const { callbackPromise } = require("nodemailer/lib/shared");
 
 module.exports = {
@@ -23,6 +24,7 @@ module.exports = {
                 }
                 else
                 {
+                    
                     let bool = bcrypt.compareSync(data.password,results[0].password);                   
 
                     if(bool == false){
@@ -88,6 +90,66 @@ module.exports = {
             }      
         );         
     },  
+
+    changepwd:(bodyData,callBack) => {
+        if(bodyData.newPassword == bodyData.confirmPassword){
+            var email = bodyData.email;
+            var userName = bodyData.username;
+            var bOldPassword =  bodyData.oldPassword;  
+            var newPassword = bodyData.newPassword;         
+
+            pool.query(
+                `select password from users where email = ? and username = ?`,
+                [email,userName],
+                (err,results)=>{
+                    var queryData = results;
+                    if(err){
+                        return callBack(err); 
+                    }else if(queryData.length == 0){
+                        return callBack("Unable to update your password..!",null);  
+                    }else if(bOldPassword != queryData[0].password){
+                        return callBack("Invalid current password..!",null);
+                    }else{
+                        pool.query(
+                            `update users set password = ? where email = ? and username=?`,//query
+                            [newPassword,email,userName],//passing parameters
+                            (err,results)=>{//sending response
+                                if(err){
+                                    return callBack(err);
+                                }else if(results){
+                                    return callBack(null,"Password updated successfully..!")
+                                }else{
+                                    return callBack("Unable to update your password..!")
+                                }
+                            }
+                        );
+                    }
+                }
+            );           
+        }else{
+           return callBack("Passwords dont match..!",null);
+        }
+    },
+    forgotpwd:(body,callBack)=>{
+        pool.query(
+            `select password,email from users where email = ?`,
+            [body.email],
+            (error,results)=>{
+                if(error){
+                    return callBack(error);
+                }else if(results.length==0){
+                    return callBack("data not found");
+                }else if(results){
+                    const data={
+                        password:results[0].password
+                    }
+                    return callBack(null,data);
+
+                }
+            }
+        )
+    },
+    
 
      /*** creating the new user */
      create:(data, callBack) => {            
