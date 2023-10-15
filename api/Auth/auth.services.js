@@ -10,7 +10,7 @@ module.exports = {
     fetchUser:(data,callBack) => {     
         // return callBack("User is not blocked");                    
         pool.query(
-            `select id,userRole,first_name, login_fail_attempt, email, password,companyCode,username from users where email = ?`,
+            `select id,userRole,first_name,last_name,contact,designation,address,login_fail_attempt, email, password,companyCode,username from users where email = ?`,
             [
                 data.email,               
             ],     
@@ -79,7 +79,12 @@ module.exports = {
                                                 company:queryData[0].companyCode,
                                                 empid:queryData[0].id, //getting from  userr table
                                                 username:queryData[0].username,
-                                                email:queryData[0].email
+                                                email:queryData[0].email,
+                                                firstName:queryData[0].first_name,
+                                                lastName:queryData[0].last_name,
+                                                contact:queryData[0].contact,
+                                                designation:queryData[0].designation,
+                                                address:queryData[0].address                      
 
                                             };                                            
                                             return callBack(null,message);   

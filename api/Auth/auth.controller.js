@@ -26,8 +26,15 @@ module.exports = {
                         userRole:results.userRole,
                         userCompany:results.company,
                         empid:results.empid,
-                        username:results.username,
-                        email:results.email           
+                        empDetails:{
+                            username:results.username,
+                            email:results.email,
+                            firstName:results.firstName, 
+                            lastName:results.lastName, 
+                            contact:results.contact,
+                            designation:results.designation,
+                            address:results.address  
+                        }                               
                     },
                     status:200
                 });
