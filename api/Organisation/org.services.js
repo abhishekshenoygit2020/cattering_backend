@@ -111,7 +111,7 @@ module.exports = {
         );
    },
     getStudents:(callBack) =>{
-        pool.query(`select * from organisation`,        
+        pool.query(`select * from employee`,        
             (err,results) => {
                 if(err){
                     return callBack(err);
@@ -124,7 +124,7 @@ module.exports = {
         );
     },
     deleteByIds:(id,callBack) =>{
-        pool.query(`delete from organisation where id=?`,
+        pool.query(`delete from employee where id=?`,
             [ 
                 id
             ],        

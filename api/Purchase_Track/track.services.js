@@ -8,13 +8,13 @@ module.exports  = {
         const trackno = data.trackno;
         const date = new Date();
     
-        pool.query('SELECT quantity FROM stock WHERE product_id = ?', [data.product_id], (error, results) => {
+        pool.query('SELECT quantity FROM stock WHERE product_id = ?', [data.product_id], (error, res) => {
             if (error) {
                 console.error(error);
                 return callBack(error);
             }
-            
-            if (results.length > 0 && results[0].quantity >= quantity) {
+            //stock quantity is > or equal to requested Quantity [requestedQty-> 3 and stockqty >= 5]
+            if (res.length > 0 && res[0].quantity >= quantity) {
                 pool.query(
                     'INSERT INTO purchase_track (product_id, quantity, trackno, date) VALUES (?, ?, ?, ?)',
                     [data.product_id, quantity, trackno, date],
@@ -22,9 +22,23 @@ module.exports  = {
                         if (error) {
                             console.error(error);
                             return callBack(error);
+                        }else{
+                            //productid
+                            //remaining stock = stockqty - requestedquantity
+                            //update query if true -> success else -> something went wrong
+                            
+                            var remainStock=0;
+                            remainStock= res[0].quantity-quantity;
+                            pool.query('update stock set quantity=? where product_id=?',
+                            [remainStock,product_id],
+                            (err,results)=>{
+                                if(err){
+                                    return callBack(err);
+                                }else{
+                                    return callBack(null, results);
+                                }
+                            });
                         }
-    
-                        return callBack(null, results);
                     }
                 );
             } else {                
@@ -35,64 +49,7 @@ module.exports  = {
         });
     },
     
-    // Updated createProduct function
-    // const createProduct = (req, res) => {
-    //     const body = req.body;
-    //     const product_id = req.params.product_id;
-    
-    //     create(body, product_id, (err, results) => {
-    //         if (err) {
-    //             console.error(err);
-    //             return res.status(500).json({
-    //                 success: 0,
-    //                 data: err,
-    //                 message: err,
-    //             });
-    //         } else {
-    //             console.log(results);
-    //             return res.status(200).json({
-    //                 success: 1,
-    //                 data: results,
-    //             });
-    //         }
-    //     });
-    // },
-                   
-    //     pool.query(
-    //         `select * from purchase_track where id = ?`,
-    //         [data.id],
-    //         (err,results) =>{
-    //             var date=new Date();
-    //             // var rand = "PROD" + Math.floor(Math.random() * 90000 + 10000);
-                
-    //             if(results == ""){
-    //                 pool.query(
-    //                     `INSERT INTO purchase_track(product_id,quantity,trackno,date) VALUES (?,?,?,?)`,
-    //                      [
-    //                         data.product_id,
-    //                         data.quantity,
-    //                         data.trackno,
-    //                         date
-    //                      ],
-    //                      (err,results) =>{
-    //                          if(err){
-    //                             return callBack(err);   
-    //                          }
-    //                          else{
-    //                              return callBack(null, results);
-    //                          }
-    //                      }
-    //                  );
-    //             }else if(err){
-    //                 return callBack(err);
-    //             }else{
-    //                 err = "Data Found Duplicate";
-    //                 return callBack(err);
-    //             }
-    //         }
-    //      ); 
-                  
-    //  },
+
      getProductById:(id,callBack) => {
         pool.query(
             `select * from purchase_track where id = ?`,

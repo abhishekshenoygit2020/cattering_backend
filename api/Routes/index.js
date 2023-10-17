@@ -15,6 +15,8 @@ const productRouter=require("../Products/product.router");
 const trackRouter=require("../Purchase_Track/track.router");
 const stockRouter=require("../Stock/stock.router");
 const purchaseRouter=require("../Purchase/purchase.router");
+const feedbackRouter=require("../Feedback/feedback.router");
+const serviceRouter=require("../Service/service.router");
 
 const {verifyToken} = require("../Auth/auth.controller");
 
@@ -38,6 +40,7 @@ router.use("/api/products",productRouter);
 router.use("/api/track",trackRouter);
 router.use("/api/stock",stockRouter);
 router.use("/api/purchase",purchaseRouter);
-
+router.use("/api/feedback",feedbackRouter);
+router.use("/api/service",serviceRouter);
 
 module.exports = router; 
