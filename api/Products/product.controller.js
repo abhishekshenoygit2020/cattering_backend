@@ -1,7 +1,9 @@
-const { create, getProducts, getProductById, updateProduct, deleteProductById } = require("./product.services");
+const { create, getProducts, getProductById, updateProduct, deleteProductById,getsearchedProducts } = require("./product.services");
 const { genSaltSync, hashSync} = require("bcrypt");
 const { get } = require("express/lib/response");
 var nodemailer = require('nodemailer');
+const fs = require('fs');
+const mime = require('mime');
 
 module.exports = {
     createProduct:(req,res) => {
@@ -10,11 +12,21 @@ module.exports = {
         uploadDocument(req.body.resumeDoc,"resumeDoc");
         
         
+        // if(body.image === ""){
+        // }else{
+        //     docType = "image";
+        //     body.image = uploadDocument(req.body.image,docType);
+        // }
+
+
         if(body.image === ""){
+            
         }else{
-            docType = "image";
+            docType = "productImage";
             body.image = uploadDocument(req.body.image,docType);
         }
+
+
         create(body, (err, results) => {
             if(err){
                 return res.status(500).json({
@@ -47,6 +59,22 @@ module.exports = {
      },
      getProducts:(req,res) => {        
         getProducts((err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    data:err
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+     },
+     getsearchedProducts:(req,res) => {
+        const body = req.body;
+        getsearchedProducts(body,(err, results) => {
             if(err){
                 return res.status(500).json({
                     success:0,
@@ -95,6 +123,9 @@ module.exports = {
         });
      }
 };
+
+
+
 const uploadDocument = (doc,docType) => {
 
     let folderName = "";
@@ -102,9 +133,11 @@ const uploadDocument = (doc,docType) => {
     let DocData = doc;
     let base64Data = "";
 
-    const saveFile = (folderName,DocData) => {
-        DocPath = folderName + '/' + Date.now()+'.pdf';            
-       
+    const saveFile = (folderPath,folderName,DocData) => {
+        DocPath = folderName + '/' + Date.now()+'.jpg';  
+        Path  = folderPath + '/' + Date.now()+'.jpg';  
+        // to convert base64 format into random filename
+        base64Data = DocData.replace(/^data:([A-Za-z-+/]+);base64,/, ''); 
     
         if (!fs.existsSync(folderName)) {                
             fs.mkdirSync(folderName);
@@ -113,17 +146,19 @@ const uploadDocument = (doc,docType) => {
             fs.writeFileSync(DocPath, base64Data,  {encoding: 'base64'});
         }       
         
-        return DocPath;
+        return Path;
     };
 
-    switch(docType){
-        case "selectedImage":            
-            folderName = './image';        
-            DocPath = saveFile(folderName,DocData); 
-            break;
+    switch(docType){          
+            
+        case "productImage":
+            folderName = './Images/productImage';
+            folderPath = '/Images/productImage'; 
+            DocPath = saveFile(folderPath,folderName,DocData);    
+            break;         
 
         default:            
-        break;
+            break;
     }    
     
     return DocPath;
