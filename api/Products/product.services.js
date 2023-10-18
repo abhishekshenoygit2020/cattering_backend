@@ -66,7 +66,7 @@ module.exports  = {
      //getting the products data
      getProducts:(callBack) => {
          pool.query(
-            `SELECT product.id,category.name, product.pname, product.price, product.description, product.image, product.warranty, product.date, product.status
+            `SELECT product.id,category.name as catname, product.pname as name, product.price, product.description as p_desc, product.image as img, product.warranty, product.date, product.status
             FROM product
             INNER JOIN category ON product.category_id = category.id`,
             (err,results) => {
@@ -82,6 +82,27 @@ module.exports  = {
             }
          );
      },
+     getsearchedProducts:(data,callBack) => {
+        var searchedData = data.searchedData;
+        pool.query(
+           `SELECT product.id,category.name as catname, product.pname as name, product.price, product.description as p_desc, product.image as img, product.warranty, product.date, product.status
+           FROM product
+           INNER JOIN category ON product.category_id = category.id WHERE product.pname LIKE ?`,
+           ["%"+searchedData+"%"],
+           (err,results) => {
+               if(err){
+                   return callBack(err);
+               }else if(results == ""){
+                   err = "Data Not Found";
+                   return callBack(err);
+               }else{
+                   return callBack(null, results);
+               }
+
+           }
+        );
+    },
+
      updateProduct:(data, id, callBack) => {
         pool.query(
             `select * from product where id = ?`,
