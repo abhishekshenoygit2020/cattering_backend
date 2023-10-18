@@ -100,11 +100,11 @@ module.exports  = {
     service:(callBack) => {
         pool.query(
             `select  product.pname, service.id, users.first_name, users.last_name,  users.contact, service.service_no,service.problem, service.date, service.status,service.amount from service join users on service.userid=users.id join product on product.id = service.product_id`,
-                       (err,results) => {
+            (err,results) => {
                if(err){
                    return callBack(err);
                }else if(results == ""){
-                   err = "Data Not Found";
+                   err = "Data Not Foundss";
                    return callBack(err);
                }else{
                    return callBack(null, results);
