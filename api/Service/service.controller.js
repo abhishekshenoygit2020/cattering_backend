@@ -98,7 +98,7 @@ module.exports = {
                     return res.status(500).json({
                         success:0,
                         status:500,
-                        error:err
+                        error:"hello"
                     });
                 }else{
                     return res.status(200).json({
