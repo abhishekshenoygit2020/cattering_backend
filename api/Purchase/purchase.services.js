@@ -73,9 +73,8 @@ module.exports  = {
      //getting the products data
      getProducts:(callBack) => {
          pool.query(
-            `SELECT product.id,category.name, product.pname, product.price, product.description, product.image, product.warranty, product.date, product.status
-            FROM product
-            INNER JOIN category ON product.category_id = category.id`,
+            
+            `select id,product_track,user_fullname,user_address,user_city,user_pin,payment_no,payment_method,amount,date from purchase`,
             (err,results) => {
                 if(err){
                     return callBack(err);
@@ -89,6 +88,42 @@ module.exports  = {
             }
          );
      },
+     getOnline:(callBack) => {
+        pool.query(
+           
+           `SELECT id,product_track,user_fullname,user_address,user_city,user_pin,payment_no,payment_method,date FROM purchase`,
+           (err,results) => {
+               if(err){
+                   return callBack(err);
+               }else if(results == ""){
+                   err = "Data Not Found";
+                   return callBack(err);
+               }else{
+                   return callBack(null, results);
+               }
+
+           }
+        );
+    },
+    getOffline:(callBack) => {
+        pool.query(
+           
+           `SELECT id,product_track,user_fullname,user_address,user_city,user_pin,payment_no,payment_method,date FROM purchase`,
+           (err,results) => {
+               if(err){
+                   return callBack(err);
+               }else if(results == ""){
+                   err = "Data Not Found";
+                   return callBack(err);
+               }else{
+                   return callBack(null, results);
+               }
+
+           }
+        );
+    },
+
+     //SELECT id,product_track,user_fullname,user_address,user_city,user_pin,payment_no,payment_method,date FROM `purchase`;
      updateProduct:(data, id, callBack) => {
         pool.query(
             `select * from product where id = ?`,
