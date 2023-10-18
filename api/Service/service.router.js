@@ -5,7 +5,7 @@ router.post("/add", create)
         .get("/:id", getById)
         .post("/:id/update", updatebyId)
         .get("/", getData)
-        .get("/", getdatasolve)
+        .get("/get", getdatasolve)
         .delete("/:id/delete",deleteById);
 
 
