@@ -1,4 +1,4 @@
-const {login,otpGeneration, createUser, updatePassword, getCompanyUsers ,getUsers, logoutUser ,logoutdetail,changePassword,forgotPassword} = require("./auth.controller");
+const {login,otpGeneration, createUser, updatePassword, getCompanyUsers ,getUsers, logoutUser ,logoutdetail,changePassword,forgotPassword,getUserById} = require("./auth.controller");
 
 const router = require("express").Router();
 
@@ -7,6 +7,7 @@ router.post("/login", login)
     .post("/mailsent/mail", otpGeneration)
     .post("/updatePassword", updatePassword)
     .get("/getUser",getCompanyUsers)
+    .get("/getUserById",getUserById)
     .get("/get",getUsers)
     .post("/logout",logoutUser)
     .post("/changePassword",changePassword)

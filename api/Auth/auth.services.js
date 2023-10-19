@@ -248,21 +248,37 @@ module.exports = {
         );
    },
    getUser:(companyCode,callback)=>{
-    pool.query(
-        'select * from users where companyCode=? and userRole <> "user"',
-        [companyCode],
-        (err,results)=>{
-            if(results.length==0){
-                var empty ="Data not found";
-                return callback(null,empty);
-            }else if(results){
-                return callback(null,null,results);
-            }else{
-                return callback(err);
+        pool.query(
+            'select * from users where companyCode=? and userRole <> "user"',
+            [companyCode],
+            (err,results)=>{
+                if(results.length==0){
+                    var empty ="Data not found";
+                    return callback(null,empty);
+                }else if(results){
+                    return callback(null,null,results);
+                }else{
+                    return callback(err);
+                }
             }
-        }
-    );
-},
+        );
+    },
+    getUserById:(empid,callBack)=>{
+        pool.query(
+            'select * from users where id = ? ',
+            [empid],
+            (err,results)=>{
+                if(results.length==0){
+                    var empty ="Data not found";
+                    return callBack(null,empty);
+                }else if(results){
+                    return callBack(null,null,results);
+                }else{
+                    return callBack(err);
+                }
+            }
+        );
+    },
 
 logoutUsers:(data,callback)=>{
   
