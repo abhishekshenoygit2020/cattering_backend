@@ -77,39 +77,64 @@ module.exports = {
             }
         );        
     },
-    getStudentByID:(id, callBack) =>{
-        pool.query(`select * from employee where id = ?`,
-            [id],
-            (err,results) => {
-                if(err){
+    getStudentByID:(data,id, callBack) =>{
+        
+        pool.query(
+            `SELECT id, first_name,last_name,email,contact,address,designation,username FROM users WHERE email = ? AND id <> ?`,
+            [data.email, id],
+            (err, results) => {            
+                if (err) {
                     return callBack(err);
-                }else if(results == ""){                    
+                } else if (results.length === 0) {
                     return callBack("Data not found");
-                }else{  
+                } else {
                     return callBack(null, results);
                 }
             }
         );
     },
-    updatebyIds:(id,callBack) =>{
+    updatebyIds: (data, callBack) => {
         pool.query(
-            `update organisation set orgname=?, orgaddress=?, phone=?, email=?, contactname=?, logo=? where id = ?`,
-            [ data.orgname,
-                data.orgaddress,
-                data.phone,
-                data.email,
-                data.contactname,
-                data.logo,               
-                id
+            `UPDATE users SET first_name=?,last_name=?,contact=?,address=?,designation=?,username=? WHERE email=?`,
+            [
+                data.first_name,
+                data.last_name,
+                data.contact,
+                data.address,
+                data.designation,
+                data.username,
+                data.email, // Replace `id` with `data.email` for the WHERE clause
             ],
-            (error, results, fields) => {
-                if(error){
-                    console.log(error);
+            (err, results) => {
+                if (err) {
+                    return callBack(err);
+                } else {
+                    return callBack(null, results);
                 }
-                return callBack(null, results[0]);
             }
         );
-   },
+    },
+    
+    
+//     updatebyIds:(id,callBack) =>{
+//         pool.query(
+//             `update organisation set orgname=?, orgaddress=?, phone=?, email=?, contactname=?, logo=? where id = ?`,
+//             [ data.orgname,
+//                 data.orgaddress,
+//                 data.phone,
+//                 data.email,
+//                 data.contactname,
+//                 data.logo,               
+//                 id
+//             ],
+//             (error, results, fields) => {
+//                 if(error){
+//                     console.log(error);
+//                 }
+//                 return callBack(null, results[0]);
+//             }
+//         );
+//    },
     getStudents:(callBack) =>{
         pool.query(`select * from employee`,        
             (err,results) => {

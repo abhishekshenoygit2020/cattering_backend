@@ -27,8 +27,9 @@ module.exports = {
     },
 
     getStudentById:(req, res) => {
+        const body = req.body;
         const id = req.params.id;
-        getStudentByID(id,(err,results) => {
+        getStudentByID(body,id,(err,results) => {
             if(err){
                 return res.status(500).json({
                     success:0,
@@ -46,21 +47,22 @@ module.exports = {
     },
     updatebyId:(req,res) =>{
         const body = req.body;
-        const id = req.params.id;
-        const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
-        updatebyIds(id, body, (err, results) => {
+        
+        
+        updatebyIds( body, (err, results) => {
             if(err){
                 console.log(err);
                 return res.status(500).json( {
                     success:0,
-                    message:"Database Connection error"
+                    status:500,
+                    error:err
                 }); 
             }
             else{
                 return res.status(200).json({
                     success:1,
-                    message:"Updated succesfully"
+                    message:results,
+                    status:200
                 });
             }            
         });

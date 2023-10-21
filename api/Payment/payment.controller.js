@@ -1,4 +1,4 @@
-const { creates,getByIDs,updatebyIds,getDatas,getSolved,deleteByIds, service,servicemonth } = require('./service.services');
+const { creates,getByIDs,updatebyIds,getDatas,deleteByIds } = require('./payment.services');
 const fs = require('fs');
 const mime = require('mime');
 var nodemailer = require('nodemailer');
@@ -52,7 +52,6 @@ module.exports = {
                     message:err
                 });
             }else{
-                console.log(results);
                 return res.status(200).json({
                     sucsess:1,
                     message:results
@@ -62,54 +61,6 @@ module.exports = {
      },
     getData:(req,res) => {
         getDatas((err,results) => {
-                if(err){
-                    return res.status(500).json({
-                        success:0,
-                        status:500,
-                        error:err
-                    });
-                }else{
-                    return res.status(200).json({
-                        sucsess:1,
-                        data:results
-                    });
-                }
-        });
-    },
-    getdatasolve:(req,res) => {
-        getSolved((err,results) => {
-                if(err){
-                    return res.status(500).json({
-                        success:0,
-                        status:500,
-                        error:err
-                    });
-                }else{
-                    return res.status(200).json({
-                        sucsess:1,
-                        data:results
-                    });
-                }
-        });
-    },
-    serviceData:(req,res) => {
-        service((err,results) => {
-                if(err){
-                    return res.status(500).json({
-                        success:0,
-                        status:500,
-                        error:"hello"
-                    });
-                }else{
-                    return res.status(200).json({
-                        sucsess:1,
-                        data:results
-                    });
-                }
-        });
-    },
-    serviceMonths:(req,res) => {
-        servicemonth((err,results) => {
                 if(err){
                     return res.status(500).json({
                         success:0,
