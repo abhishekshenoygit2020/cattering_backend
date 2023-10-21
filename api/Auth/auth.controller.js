@@ -1,4 +1,4 @@
-const { create, fetchUser, updatePasswords, getUsers,getUser, logoutUsers ,logoutdetails,changepwd,forgotpwd,getUserById} = require("./auth.services");
+const { create, fetchUser, updatePasswords, getUsers,getUser, logoutUsers ,logoutdetails,changepwd,forgotpwd,getUserById,updateUserById} = require("./auth.services");
 const { genSaltSync, hashSync} = require("bcrypt");
 const { get } = require("express/lib/response");
 var nodemailer = require('nodemailer');
@@ -196,6 +196,27 @@ module.exports = {
                     error:err
                 });
             }
+            else{
+                return res.status(200).json({
+                    success:1,
+                    data:results,
+                    status:200
+                });
+            } 
+        });      
+    },
+    updateUserById:(req,res)=>{
+        var data = req.body;
+        data.id = req.headers['empid'];
+        updateUserById(data,(err,results)=>{
+            if(err){
+                // console.log(err);
+                return res.status(500).json( {
+                    success:0,
+                    status:500,
+                    error:err
+                }); 
+            }           
             else{
                 return res.status(200).json({
                     success:1,
