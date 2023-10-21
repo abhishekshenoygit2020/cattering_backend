@@ -17,6 +17,8 @@ const stockRouter=require("../Stock/stock.router");
 const purchaseRouter=require("../Purchase/purchase.router");
 const feedbackRouter=require("../Feedback/feedback.router");
 const serviceRouter=require("../Service/service.router");
+const checkoutRouter=require("../Checkout/checkout.router");
+const paymentRouter=require("../Payment/payment.router");
 
 const {verifyToken} = require("../Auth/auth.controller");
 
@@ -42,5 +44,7 @@ router.use("/api/stock",stockRouter);
 router.use("/api/purchase",purchaseRouter);
 router.use("/api/feedback",feedbackRouter);
 router.use("/api/service",serviceRouter);
+router.use("/api/checkout",checkoutRouter);
+router.use("/api/payment",paymentRouter);
 
 module.exports = router; 

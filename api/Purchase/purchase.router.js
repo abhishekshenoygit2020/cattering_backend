@@ -1,12 +1,11 @@
-const { createProduct, getProductById , getProducts, updateProduct, deleteProductById, getOnlines, getOfflines} = require("./purchase.controller");
+const { createProduct, getProductById , getProducts, updateProduct, deleteProductById, getOnlines, getCashs,getmonths} = require("./purchase.controller");
 const router = require("express").Router();
 
 
 router.post("/add", createProduct)
-        .get("/:id", getProductById)
+        .get("/:id/get", getProductById)
         .get("/", getProducts)
-        .get("/online",getOnlines)
-        .get("/offline",getOfflines)
+        .get("/getmonth",getmonths)
         .post("/:id/update", updateProduct)
         .delete("/:id/delete", deleteProductById);
 

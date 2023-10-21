@@ -88,6 +88,22 @@ module.exports  = {
             }
          );
      },
+     getCash: (callBack) => {
+        pool.query(
+            `SELECT id, product_track, user_fullname, user_address, user_city, user_pin, payment_no, payment_method, amount, date
+             FROM purchase`, 
+            (err, results) => {
+                if (err) {
+                    return callBack(err);
+                } else if (results.length === 0) {
+                    err = "Data Not Found";
+                    return callBack(err);
+                } else {
+                    return callBack(null, results);
+                }
+            }
+        );
+    },
      getOnline:(callBack) => {
         pool.query(
            
@@ -105,23 +121,33 @@ module.exports  = {
            }
         );
     },
-    getOffline:(callBack) => {
-        pool.query(
-           
-           `SELECT id,product_track,user_fullname,user_address,user_city,user_pin,payment_no,payment_method,date FROM purchase`,
-           (err,results) => {
-               if(err){
-                   return callBack(err);
-               }else if(results == ""){
-                   err = "Data Not Found";
-                   return callBack(err);
-               }else{
-                   return callBack(null, results);
-               }
+    
+    getmonth:(callBack) => {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Add 1 because months are 0-indexed
+    const currentYear = currentDate.getFullYear();
 
-           }
-        );
-    },
+    pool.query(
+        `SELECT id, product_track, user_fullname, user_address, user_city, user_pin, payment_no, payment_method, amount, date
+        FROM purchase
+        WHERE MONTH(date) = ? AND YEAR(date) = ?`,
+        [currentMonth, currentYear],
+        (err, results) => {
+            if (err) {
+                return callBack(err);
+            } else if (results.length === 0) {
+                err = "Data Not Found";
+                return callBack(err);
+            } else {
+                return callBack(null, results);
+            }
+        }
+    );
+},
+
+
+
+
 
      //SELECT id,product_track,user_fullname,user_address,user_city,user_pin,payment_no,payment_method,date FROM `purchase`;
      updateProduct:(data, id, callBack) => {

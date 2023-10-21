@@ -113,6 +113,26 @@ module.exports  = {
            }
         );
     },
+    servicemonth:(callBack) => {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1; // Add 1 because months are 0-indexed
+        const currentYear = currentDate.getFullYear();
+        pool.query(
+            `select  product.pname, users.first_name, users.last_name,  users.contact, service.service_no,service.problem, service.date, service.status,service.amount 
+            from service join users on service.userid=users.id join product on product.id = service.product_id WHERE MONTH(service.date) = ? AND YEAR(service.date) = ?`,
+            [currentMonth, currentYear],
+            (err, results) => {
+                if (err) {
+                    return callBack(err);
+                } else if (results.length === 0) {
+                    err = "Data Not Found";
+                    return callBack(err);
+                } else {
+                    return callBack(null, results);
+                }
+            }
+        );
+    },
      updatebyIds: (data, id, callBack) => {
         var status = "solved";
         pool.query(

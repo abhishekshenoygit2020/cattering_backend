@@ -1,4 +1,4 @@
-const { create, getProducts, getProductById, updateProduct,getOnline, deleteProductById, getOffline } = require("./purchase.services");
+const { create, getProducts, getProductById, updateProduct,getOnline, deleteProductById,getCash ,getmonth} = require("./purchase.services");
 const { genSaltSync, hashSync} = require("bcrypt");
 const { get } = require("express/lib/response");
 var nodemailer = require('nodemailer');
@@ -52,6 +52,21 @@ module.exports = {
             }
         });
      },
+     getCashs:(req,res) => {        
+        getCash((err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    data:err
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+     },
      getOnlines:(req,res) => {        
         getOnline((err, results) => {
             if(err){
@@ -67,8 +82,9 @@ module.exports = {
             }
         });
      },
-     getOfflines:(req,res) => {        
-        getOffline((err, results) => {
+     
+     getmonths:(req,res) => {        
+        getmonth((err, results) => {
             if(err){
                 return res.status(500).json({
                     success:0,
