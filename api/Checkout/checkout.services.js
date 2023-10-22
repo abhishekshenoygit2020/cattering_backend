@@ -18,6 +18,8 @@ module.exports = {
                 const remark = "order has been initiated";
                 const date = new Date();
 
+                
+
                 if (results.length === 0) {
                     pool.query(
                         `INSERT INTO trackorder(userid, trackno, status, remark, date) VALUES (?,?,?,?,?)`,
@@ -89,6 +91,100 @@ module.exports = {
                         );
 
                     }
+                }
+            }
+        );
+    },
+
+    getOrders:(data,callBack) => {
+        pool.query(`SELECT orders.*, product.price FROM orders INNER JOIN product on orders.productId =  product.id where userid = ?`,
+          [data.userid],
+          (error,results) => {
+                if(error){
+                    return callBack(error);
+                }
+                if(results.length == 0){
+                    return callBack("Data not found");
+                }
+                if(results){
+                    return callBack(null,results);
+                }
+            }        
+        );
+    },
+
+    updatePayment:(data,callBack) => {
+        pool.query(`SELECT orders.*, product.price FROM orders INNER JOIN product on orders.productId = product.id where orders.userid = ? AND orders.orderStatus = "initiated"`,
+            [data.userid],
+            (error,results) => {
+                if(error){
+                    return callBack(error)
+                }if(results.length == 0){
+                    return callBack("Data not found");
+                }
+                if(results){
+                    var trkno = results[0].trackid;
+                    results.forEach(item => {
+                        const quantity = parseInt(item.quantity);
+                        const price = parseFloat(item.price);
+                        item.totalPrice = quantity * price;                        
+                    });
+                    
+                    // Calculate the overall total by summing up the total prices of all items
+                    const overallTotal = results.reduce((total, item) => total + item.totalPrice, 0);
+
+                    var paymentno = "PAYMENT_" + Math.floor(Math.random() * 90000 + 10000);
+                    const date = new Date();
+                    pool.query(`INSERT INTO user_payment(payment_no, user_id, amount, payment_status, track_id, date) VALUES (?,?,?,?,?,?)`,
+                        [paymentno,data.userid,overallTotal,"Paid",trkno,date],
+                        (error,paymentRes) => {
+                            if(error){
+                                return callBack(error);
+                            }
+                            if(paymentRes){
+                                pool.query(`update orders set payment_id = ? , orderStatus = ? where trackid = ?`,
+                                    [paymentRes.insertId,"Paid",trkno],
+                                    (error,orderUpdateSatus)=> {
+                                        if(error){
+                                            return callBack(error);
+                                        }
+                                        if(orderUpdateSatus){
+                                            pool.query(`update trackorder set status = ? where id = ?`,
+                                                ["Paid",trkno],
+                                                (error,trackorderUpdateSatus)=> {
+                                                    if(error){
+                                                        return callBack(error);
+                                                    }
+                                                    if(trackorderUpdateSatus){
+                                                        return callBack(null,"payment Done");
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    );
+                    
+                    
+                }
+            }
+        )
+    
+    },
+
+    getUserTrackNo:(data,callBack) => {
+        pool.query('SELECT * FROM `trackorder` where userid = ?',
+            [data.userid],
+            (error,results) => {
+                if(error){
+                    return callBack(error);
+                }if(results.length == 0){
+                    return callBack("Data not found");
+                }
+                if(results){
+                    return callBack(null,results);
                 }
             }
         );

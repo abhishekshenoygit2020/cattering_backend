@@ -1,4 +1,4 @@
-const { creates,getByIDs,updatebyIds,getDatas,deleteByIds } = require('./checkout.services');
+const { creates,getByIDs,updatebyIds,getDatas,deleteByIds,getOrders,getUserTrackNo,updatePayment } = require('./checkout.services');
 const fs = require('fs');
 const mime = require('mime');
 var nodemailer = require('nodemailer');
@@ -91,7 +91,58 @@ module.exports = {
                 });
             }
         });
-     } 
+    },
+    getOrders:(req,res) => {
+        const body = req.body;
+        getOrders(body, (err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    error:err,
+                    status:500
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+    },
+    updatePayment:(req,res) => {
+        const body = req.body;
+        updatePayment(body, (err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    error:err,
+                    status:500
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+    },
+    getUserTrackNo:(req,res) => {
+        const body = req.body;
+        getUserTrackNo(body, (err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    error:err,
+                    status:500
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+    }
 
 };
 
