@@ -1,4 +1,4 @@
-const { creates, gets, getsById, updates, deletesById, updateBookingStatus} = require("./booking.services");
+const { creates, gets, getsById, updates, deletesById,getStudent ,getStudentDetail,getBookings} = require("./order.services");
 const { genSaltSync, hashSync} = require("bcrypt");
 const { get } = require("express/lib/response");
 var nodemailer = require('nodemailer');
@@ -52,26 +52,58 @@ module.exports = {
             }
         });
      },
-     update:(req,res) => {
-        const body = req.body;
-        const id = req.params.id;
-        updates(body, id, (err, results) => {
+     getStud:(req,res) => {    
+        const barcode_number=req.params.barcode_number;    
+        getStudent(barcode_number,(err, results) => {
             if(err){
                 return res.status(500).json({
                     success:0,
-                    message:err
+                    data:err
                 });
             }else{
                 return res.status(200).json({
                     sucsess:1,
-                    message:results
+                    data:results
                 });
             }
         });
      },
-     updateBookingStatus:(req,res) => {
-        const body = req.body       
-        updateBookingStatus(body,(err, results) => {
+     getBookings:(req,res) => {   
+        getBookings((err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    data:err
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+     },
+     getStudDet:(req,res) => {  
+       
+        const barcode_number=req.body.barcode_number;    
+        getStudentDetail(barcode_number,(err, results) => {
+            if(err){
+                return res.status(500).json({
+                    success:0,
+                    data:err
+                });
+            }else{
+                return res.status(200).json({
+                    sucsess:1,
+                    data:results
+                });
+            }
+        });
+     },
+     update:(req,res) => {
+        const body = req.body;
+        const id = req.params.id;
+        updates(body, id, (err, results) => {
             if(err){
                 return res.status(500).json({
                     success:0,

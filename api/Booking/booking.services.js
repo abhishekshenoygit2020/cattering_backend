@@ -20,7 +20,7 @@ module.exports = {
                 }else if(results){
                     if(data.cart_item.length>0){
                          const insertData = data.cart_item.map((item) => {
-                        return [token, item.productId, item.productQuantity];
+                        return [token, item.id, item.quantity];
                     });
                         pool.query(
                         `INSERT INTO temp(token_number,item_id,quantity) VALUES ?`,
@@ -56,43 +56,6 @@ module.exports = {
                     error = "data not found";
                     return callBack(error);
                 }
-
-               
-
-                    //const cartItems = data.cart_item;
-                   // return callBack(null,results);
-
-                    // const insertData = cartItems.map((item) => {
-                    //     return [token, item.productId, item.productQuantity];
-                    // });
-                    // pool.query(
-                    //     `INSERT INTO temp(token_number,item_id,quantity) VALUES (?)`,
-                    //     [insertData],
-                    //     (err, results) => {
-                    //         if (err) {
-                    //             return callBack(err);
-                    //         }
-                    //         else {
-                    //             var date = new Date();
-
-
-                    //             pool.query(
-                    //                 'INSERT INTO booking (student_id, barcode_number, serving_time, booking_status, booking_date) VALUES (?, ?, ?, ?,?)',
-                    //                 [student_id, token, serve, 'Order Placed', date],
-
-                    //                 (error, results) => {
-                    //                     if (error) {
-                    //                         return callBack(error);
-                    //                     } else {
-
-                    //                         return callBack(null, results);
-                    //                     }
-                    //                 }
-                    //             );
-                    //         };
-                    //     }
-                    // );
-                
                 
             }
         );
@@ -147,7 +110,6 @@ module.exports = {
         pool.query(
             `select * from student where  id = ?`,
             [
-
                 id
             ],
             (err, results) => {
@@ -177,6 +139,37 @@ module.exports = {
                 } else {
                     err = "Data Found Duplicate";
                     return callBack(err);
+                }
+            }
+        );
+    },
+    updateBookingStatus: (data, callBack) => {
+        pool.query(
+            `select * from booking where  barcode_number = ? and booking_status = 'Order Placed'`,
+            [
+                data.barcode_number
+            ],
+            (err, results) => {
+                if(err){
+                    return callBack(err);
+                }else if (results == "") {
+                    return callBack("Token Number doesnot exist");
+                } else{
+                    pool.query(
+                        `UPDATE booking SET booking_status=? WHERE  barcode_number = ?`,
+                        [
+                            "Paid",
+                            data.barcode_number
+                        ],
+                        (err, results) => {
+                            if (err) {
+                                return callBack(err);
+                            }
+                            else {
+                                return callBack(null, "Status Updated");
+                            }
+                        }
+                    );
                 }
             }
         );
