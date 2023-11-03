@@ -19,7 +19,8 @@ const feedbackRouter=require("../Feedback/feedback.router");
 const serviceRouter=require("../Service/service.router");
 const checkoutRouter=require("../Checkout/checkout.router");
 const paymentRouter=require("../Payment/payment.router");
-
+const bookingRouter = require("../Booking/booking.router");
+const orderRouter=require("../Order/order.router");
 const {verifyToken} = require("../Auth/auth.controller");
 
 
@@ -33,10 +34,7 @@ router.use("/api/report",reportRouter);
 router.use("/api/header",headerRouter);
 router.use("/api/checklist",checkRouter);
 router.use("/api/title",titleRouter);
-
-
 router.use("/api/userchecklist",usercheckRouter);
-
 router.use("/api/category",categoryRouter);
 router.use("/api/products",productRouter);
 router.use("/api/track",trackRouter);
@@ -46,5 +44,10 @@ router.use("/api/feedback",feedbackRouter);
 router.use("/api/service",serviceRouter);
 router.use("/api/checkout",checkoutRouter);
 router.use("/api/payment",paymentRouter);
+router.use("/api/order",orderRouter);
+
+
+//cafe
+router.use("/api/booking",bookingRouter);
 
 module.exports = router; 

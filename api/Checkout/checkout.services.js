@@ -2,6 +2,8 @@ const res = require("express/lib/response");
 const { callbackPromise } = require("nodemailer/lib/shared");
 const pool = require("../../config/dbconfig");
 
+
+
 module.exports = {
 
     creates: (data, callBack) => {
