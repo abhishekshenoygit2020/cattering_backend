@@ -5,15 +5,22 @@ const pool = require("../../config/dbconfig");
 module.exports  = {
      creates:(data, callBack) => {
          pool.query(
-            `select * from department where deptName = ?`,
-            [data.deptName],
+            `select * from supplier where supplier_name = ?`,
+            [data.supplier_name],
             (err,results) =>{
+                var date=new Date();
+                var status="active";
                 if(results == ""){
                     pool.query(
-                        `INSERT INTO department(deptName,deptDesc) VALUES (?,?)`,
+                        `INSERT INTO supplier(place_id,supplier_name,supplier_gstin,supplier_address,supplier_phone_number,supplier_date_create,supplier_status) VALUES (?,?,?,?,?,?,?)`,
                          [
-                            data.deptName,
-                            data.deptDesc,
+                            data.place_id,
+                            data.supplier_name,
+                            data.supplier_gstin,
+                            data.supplier_address,
+                            data.supplier_phone_number,
+                            date,
+                            status
                          ],
                          (err,results) =>{
                              if(err){
@@ -35,7 +42,7 @@ module.exports  = {
      },
      getByIDs:(id,callBack) => {
         pool.query(
-            `select * from department where id = ?`,
+            `select * from supplier where id = ?`,
             [id],
             (err,results,fields) => {
                 if(err){
@@ -53,7 +60,7 @@ module.exports  = {
      },
      //getting the products data
      getDatas:(callback) =>{
-        pool.query(`select * from department`,    
+        pool.query(`select *, supplier_id as id from supplier`,    
             
             (err,results) => {
                 if(results.length==0){
@@ -69,7 +76,7 @@ module.exports  = {
     },
      updatebyIds:(data, id, callBack) => {
         pool.query(
-            `select * from department where deptName = ? and id <> ?`,
+            `select * from supplier where deptName = ? and id <> ?`,
             [
                 data.deptName,
                 id
@@ -77,7 +84,7 @@ module.exports  = {
             (err,results) =>{
                 if(results == ""){
                     pool.query(
-                        `UPDATE department SET deptName=?,deptDesc=? WHERE  id = ?`,
+                        `UPDATE supplier SET deptName=?,deptDesc=? WHERE  id = ?`,
                          [
                             data.deptName,
                             data.deptDesc,
@@ -103,7 +110,7 @@ module.exports  = {
      },
      deleteByIds:(id,callBack) => {
         pool.query(
-            `delete from department  where id = ?`,
+            `delete from supplier  where id = ?`,
             [id],
             (err,results,fields) => {
                 if(err){

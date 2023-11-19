@@ -14,14 +14,14 @@ module.exports  = {
                 var pstatus="active";
                 if(results == ""){
                     pool.query(
-                        `insert into product(category_id, pname, price, description, image, warranty, date, status)values(?,?,?,?,?,?,?,?)`,
+                        `insert into product(category_id, pname, price, description, image, type, date, status)values(?,?,?,?,?,?,?,?)`,
                          [
                             data.category_id,
                             data.pname,
                             data.price,
                             data.description,
                             data.image,
-                            data.warranty,
+                            data.type,
                             date,
                             pstatus
                             
@@ -66,7 +66,7 @@ module.exports  = {
      //getting the products data
      getProducts:(callBack) => {
          pool.query(
-            `SELECT product.id,category.name as catname, product.pname as name, product.price, product.description as p_desc, product.image as img, product.warranty, product.date, product.status
+            `SELECT product.id,category.name as catname, product.pname as name, product.price, product.description as p_desc, product.image as img, product.type, product.date, product.status
             FROM product
             INNER JOIN category ON product.category_id = category.id`,
             (err,results) => {
@@ -85,7 +85,7 @@ module.exports  = {
      getsearchedProducts:(data,callBack) => {
         var searchedData = data.searchedData;
         pool.query(
-           `SELECT product.id,category.name as catname, product.pname as name, product.price, product.description as p_desc, product.image as img, product.warranty, product.date, product.status
+           `SELECT product.id,category.name as catname, product.pname as name, product.price, product.description as p_desc, product.image as img, product.type, product.date, product.status
            FROM product
            INNER JOIN category ON product.category_id = category.id WHERE product.pname LIKE ?`,
            ["%"+searchedData+"%"],
@@ -114,14 +114,14 @@ module.exports  = {
                 if(results == ""){
                     var status="active";
                     pool.query(
-                        `UPDATE product SET category_id=?, pname=?, price=?, description=?, image=?, warranty=?, date=?,status=? WHERE  id = ?`,
+                        `UPDATE product SET category_id=?, pname=?, price=?, description=?, image=?, type=?, date=?,status=? WHERE  id = ?`,
                          [
                             data.category_id,
                             data.pname,
                             data.price,
                             data.description,
                             data.image,
-                            data.warranty,
+                            data.type,
                             date,
                             status,
                             id

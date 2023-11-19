@@ -146,9 +146,9 @@ module.exports  = {
         var stuData = "";
         var barCodeItems = "";
         pool.query(
-            `SELECT booking.barcode_number, booking.booking_status, student.student_name, student.student_address,student_contact 
+            `SELECT booking.barcode_number, booking.booking_status, users.username, users.address,users.contact 
             FROM booking 
-            INNER JOIN student ON booking.student_id = student.id 
+            INNER JOIN users ON booking.student_id = users.id 
             WHERE booking.barcode_number = ?`,
             [barcode_number],
            (err,results) => {

@@ -34,8 +34,8 @@ module.exports = {
 
 
                                 pool.query(
-                                    'INSERT INTO booking (student_id, barcode_number, serving_time, booking_status, booking_date) VALUES (?, ?, ?, ?,?)',
-                                    [student_id, token, serve, 'Order Placed', date],
+                                    'INSERT INTO booking (student_id, barcode_number, serving_time, booking_status, booking_date, program_date,place_id,program) VALUES (?, ?, ?, ?,?,?,?,?)',
+                                    [student_id, token, serve, 'Order Placed', date, data.programDate,data.placeID,data.program],
 
                                     (error, results) => {
                                         if (error) {

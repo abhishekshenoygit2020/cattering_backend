@@ -21,6 +21,7 @@ const checkoutRouter=require("../Checkout/checkout.router");
 const paymentRouter=require("../Payment/payment.router");
 const bookingRouter = require("../Booking/booking.router");
 const orderRouter=require("../Order/order.router");
+const placeRouter = require("../Place/cat.router");
 const {verifyToken} = require("../Auth/auth.controller");
 
 
@@ -45,6 +46,7 @@ router.use("/api/service",serviceRouter);
 router.use("/api/checkout",checkoutRouter);
 router.use("/api/payment",paymentRouter);
 router.use("/api/order",orderRouter);
+router.use("/api/place",placeRouter);
 
 
 //cafe
